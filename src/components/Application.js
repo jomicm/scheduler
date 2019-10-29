@@ -68,8 +68,8 @@ export default function Application(props) {
         setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}))
       });
   }, []);
-  const appointments = getAppointmentsForDay(state, state.day);
   const interviewers = getInterviewersForDay(state, state.day);
+  // const appointments = getAppointmentsForDay(state, state.day);
   const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
@@ -84,7 +84,6 @@ export default function Application(props) {
       .then(res => setState({ ...state, appointments }))
   };
   const deleteInterview = (id) => {
-    console.log('Deleting interview:', id);
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -99,6 +98,21 @@ export default function Application(props) {
         return true;
       })
   };
+
+  const appointments = getAppointmentsForDay(state, state.day).map(a => {
+    const interview = getInterview(state, a.interview);
+    return (
+      <Appointment
+        bookInterview={bookInterview}
+        deleteInterview={deleteInterview}
+        key={a.id}
+        id={a.id} 
+        time={a.time} 
+        interview={interview}
+        interviewers={interviewers}
+      />)}
+    );
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -118,20 +132,7 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {appointments.map((a) => {
-          const interview = getInterview(state, a.interview);
-          return (
-            <Appointment
-              bookInterview={bookInterview}
-              deleteInterview={deleteInterview}
-              key={a.id}
-              id={a.id} 
-              time={a.time} 
-              interview={interview}
-              interviewers={interviewers}
-            />)}
-          )
-        } 
+        { appointments }
         <Appointment key="last" time="6pm" />
       </section>
     </main>
