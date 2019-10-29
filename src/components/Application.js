@@ -3,7 +3,7 @@ import axios from 'axios';
 import DayList from './DayList';
 import "components/Application.scss";
 import Appointment from './Appointment';
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterviewersForDay, getInterview } from "helpers/selectors";
 
 // const appointments = [
 //   {
@@ -69,6 +69,28 @@ export default function Application(props) {
       });
   }, []);
   const appointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
+  const bookInterview = (id, interview) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    const interviewPut = {student: interview.student, interviewer: interview.interviewer.id}
+    return axios.put(`/api/appointments/${id}`, {interview: interviewPut})
+      .then(res => {
+        console.log('resultPutAppointment', res);
+        setState({ ...state, appointments });
+        return true;
+      })
+      .catch(err => console.log(err));
+  };
+  const cancelInterview = (id) => {
+    console.log('Canceling interview:', id);
+  };
   return (
     <main className="layout">
       <section className="sidebar">
@@ -91,11 +113,15 @@ export default function Application(props) {
         {appointments.map((a) => {
           const interview = getInterview(state, a.interview);
           return (
-            <Appointment 
-              key={a.id}  
+            <Appointment
+              bookInterview={bookInterview}
+              cancelInterview={cancelInterview}
+              key={a.id}
               id={a.id} 
               time={a.time} 
-              interview={interview} />)}
+              interview={interview}
+              interviewers={interviewers}
+            />)}
           )
         } 
         <Appointment key="last" time="6pm" />
