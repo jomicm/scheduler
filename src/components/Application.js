@@ -88,8 +88,23 @@ export default function Application(props) {
       })
       .catch(err => console.log(err));
   };
-  const cancelInterview = (id) => {
-    console.log('Canceling interview:', id);
+  const deleteInterview = (id) => {
+    console.log('Deleting interview:', id);
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    return axios.delete(`/api/appointments/${id}`)
+      .then(res => {
+        console.log('resultDELETEAppointment', res);
+        setState({ ...state, appointments });
+        return true;
+      })
+      .catch(err => console.log(err));
   };
   return (
     <main className="layout">
@@ -115,7 +130,7 @@ export default function Application(props) {
           return (
             <Appointment
               bookInterview={bookInterview}
-              cancelInterview={cancelInterview}
+              deleteInterview={deleteInterview}
               key={a.id}
               id={a.id} 
               time={a.time} 
