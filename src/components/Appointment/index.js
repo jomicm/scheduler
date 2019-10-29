@@ -22,6 +22,10 @@ const ERROR_DELETE = "ERROR_DELETE";
 export default function Appointment(props) {
   const hook = useVisualMode(props.interview ? SHOW : EMPTY);
   const save = (name, interviewer) => {
+    if (!name.length || !interviewer) {
+      console.log('Incorrect data!');
+      return;
+    }
     let interviewerObj = props.interviewers.filter(i => i.id === interviewer)[0];
     const interview = {
       student: name,
@@ -29,14 +33,14 @@ export default function Appointment(props) {
     };
     hook.transition(SAVING);
     props.bookInterview(props.id, interview)
-      .then(res => hook.transition(res.status[0] === 2 ? SHOW : ERROR_SAVE))
-      .catch(err => console.error('save', err));
+      .then(res => hook.transition(SHOW))
+      .catch(err => hook.transition(ERROR_SAVE));
   };
   const deleteInterview = () => {
     hook.transition(DELETING);
     props.deleteInterview(props.id)
-      .then(res => hook.transition(res.status[0] === 2 ? EMPTY : ERROR_DELETE))
-      .catch(err => console.error('selete', err));
+      .then(res => hook.transition(EMPTY))
+      .catch(err => hook.transition(ERROR_DELETE, true));
   };
   const confirmDeleteInterview = () => {
     hook.transition(CONFIRM);
@@ -63,7 +67,7 @@ export default function Appointment(props) {
       { hook.mode === CONFIRM && <Confirm message={'Are you sure to delete appointment?'} onConfirm={deleteInterview} onCancel={() => hook.transition(SHOW)}/>}
       { hook.mode === DELETING && <Status message={'Deleting...'}/>}
       { hook.mode === ERROR_SAVE && <Error message={'Error while saving/updating'} onClose={() => hook.back()}/>}
-      { hook.mode === ERROR_DELETE && <Error message={'Error while deleting'} onClose={() => hook.transition(SHOW)}/>}
+      { hook.mode === ERROR_DELETE && <Error message={'Error while deleting'} onClose={() => hook.back()}/>}
     </article>
   )
 }

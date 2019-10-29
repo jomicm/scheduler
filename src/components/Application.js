@@ -82,7 +82,6 @@ export default function Application(props) {
     const interviewPut = {student: interview.student, interviewer: interview.interviewer.id}
     return axios.put(`/api/appointments/${id}`, {interview: interviewPut})
       .then(res => setState({ ...state, appointments }))
-      .catch(err => err.response);
   };
   const deleteInterview = (id) => {
     console.log('Deleting interview:', id);
@@ -96,11 +95,9 @@ export default function Application(props) {
     };
     return axios.delete(`/api/appointments/${id}`)
       .then(res => {
-        console.log('resultDELETEAppointment', res);
         setState({ ...state, appointments });
         return true;
       })
-      .catch(err => err.response);
   };
   return (
     <main className="layout">
