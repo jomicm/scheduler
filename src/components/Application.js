@@ -60,7 +60,6 @@ export default function Application(props) {
     interviewers: {}
   });
   useEffect(() => {
-
     const daysPromise = axios.get('/api/days');
     const appointmentsPromise = axios.get('/api/appointments');
     const interviewersPromise = axios.get('/api/interviewers');
