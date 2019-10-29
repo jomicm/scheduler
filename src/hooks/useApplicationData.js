@@ -4,7 +4,8 @@ import axios from 'axios';
 const actions = {
   set_day: 'set_day',
   set_application_data: 'set_application_data',
-  set_interview: 'set_interview'
+  set_interview: 'set_interview',
+  set_days: 'set_days'
 }
 
 const useApplicationData = (initial) => {
@@ -17,6 +18,9 @@ const useApplicationData = (initial) => {
     },
     set_interview(_state, _action) {
       return { ..._state, appointments: _action.value }
+    },
+    set_days(_state, _action) {
+      return { ..._state, days: _action.value }
     }
   };
   const reducer = (state, action) => {
@@ -37,6 +41,15 @@ const useApplicationData = (initial) => {
         dispatch({type: actions.set_application_data, value: all})
       });
   }, []);
+  const getDayWithAppointment = id => state.days.map(d => d.appointments.includes(id) ? d.id : null).filter(f => f)[0];
+  const updateDaysSlots = (appointmentId, sign = -1) => {
+    const dayId = getDayWithAppointment(appointmentId);
+    const localDays = state.days.slice();
+    const localDay = localDays.filter(d => d.id === dayId)[0];
+    localDay.spots += 1 * sign;
+    dispatch({ type: actions.set_days, value: localDays });
+  };
+
   return {
     state,
     setDay: (newDay) => dispatch({type: actions.set_day, value: newDay}),
@@ -51,7 +64,10 @@ const useApplicationData = (initial) => {
       };
       const interviewPut = {student: interview.student, interviewer: interview.interviewer.id}
       return axios.put(`/api/appointments/${id}`, {interview: interviewPut})
-        .then(res => dispatch({ type: actions.set_interview, value: appointments }));
+        .then(res => {
+          dispatch({ type: actions.set_interview, value: appointments });
+          updateDaysSlots(id);
+        });
     },
     deleteInterview: (id) => {
       const appointment = {
@@ -63,7 +79,10 @@ const useApplicationData = (initial) => {
         [id]: appointment
       };
       return axios.delete(`/api/appointments/${id}`)
-        .then(res => dispatch({ type: actions.set_interview, value: appointments }));
+        .then(res => {
+          dispatch({ type: actions.set_interview, value: appointments });
+          updateDaysSlots(id, 1);
+        });
     }
   }
 }
