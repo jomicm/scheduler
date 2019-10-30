@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Header from './Header';
 import Show from './Show';
 import Empty from './Empty';
@@ -21,6 +21,12 @@ const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
   const hook = useVisualMode(props.interview ? SHOW : EMPTY);
+
+  useEffect(() => {
+    if (props.interview) hook.transition(SHOW)
+    else if (!props.interview) hook.transition(EMPTY)
+  },[props.interview]);
+
   const save = (name, interviewer) => {
     if (!name.length || !interviewer) {
       console.log('Incorrect data!');
@@ -53,7 +59,7 @@ export default function Appointment(props) {
     <article className="appointment">
       <Header time={props.time}/>
       { hook.mode === EMPTY && <Empty onAdd={() => hook.transition(CREATE)}/> }
-      { hook.mode === SHOW && (
+      { hook.mode === SHOW && props.interview && (
         <Show 
           student={props.interview.student}
           interviewer={props.interview.interviewer}

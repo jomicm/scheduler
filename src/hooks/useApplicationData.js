@@ -1,5 +1,7 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useCallback } from 'react';
 import axios from 'axios';
+import useWebSocket from '../hooks/useWebSocket';
+const URL = process.env.REACT_APP_WEBSOCKET_URL;
 
 const actions = {
   set_day: 'set_day',
@@ -30,8 +32,31 @@ const useApplicationData = (initial) => {
     day: 'Monday',
     days: [],
     appointments: {},
-    interviewers: {}
+    interviewers: {},
+    socketMsg: ''
   });
+
+
+  //const [messages, setMessages] = useState([]);
+  // const onMessageHandler = useCallback( e => {
+  //   const res = JSON.parse(e.data);
+  //   console.log(res);
+  //   console.log('Call mod app from websocket')
+  //   modifyAppointments(res.id, res.interview, true);
+  //   setMessages(m => [...m, res]);
+  // }, [messages]);
+  const onMessageHandler = e => {
+    const res = JSON.parse(e.data);
+    console.log(res);
+    console.log('Call mod app from websocket')
+    if (!myself) {
+      modifyAppointments(res.id, res.interview, true);
+      myself = false;
+    }
+    //setMessages(m => [...m, res]);
+  };
+  useWebSocket(URL, onMessageHandler);
+  
   useEffect(() => {
     const daysPromise = axios.get('/api/days');
     const appointmentsPromise = axios.get('/api/appointments');
@@ -42,26 +67,44 @@ const useApplicationData = (initial) => {
       });
   }, []);
   const getDayWithAppointment = id => state.days.map(d => d.appointments.includes(id) ? d.id : null).filter(f => f)[0];
+  // const updateDaysSlots = (appointmentId, sign = -1) => {
+  //   const dayId = getDayWithAppointment(appointmentId);
+  //   const localDays = state.days.slice();
+  //   const localDay = localDays.filter(d => d.id === dayId)[0];
+  //   localDay.spots += 1 * sign;
+  //   dispatch({ type: actions.set_days, value: localDays });
+  // };
   const updateDaysSlots = (appointmentId, sign = -1) => {
     const dayId = getDayWithAppointment(appointmentId);
     const localDays = state.days.slice();
     const localDay = localDays.filter(d => d.id === dayId)[0];
-    localDay.spots += 1 * sign;
+    const localDayAppointments = localDay.appointments;
+    const stateAppointments = localDayAppointments.map(la => state.appointments[la].interview);
+    const availableSpots = stateAppointments.filter(a => !a).length;
+    localDay.spots = availableSpots + sign;
     dispatch({ type: actions.set_days, value: localDays });
   };
-
+  const modifyAppointments = (id, interview = null, selfUpdate = false) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: !interview ? null : { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    if (selfUpdate) {
+      dispatch({ type: actions.set_interview, value: appointments });
+      updateDaysSlots(id, !interview ? 1 : -1);
+    }
+    return appointments;
+  };
+  let myself = false;
   return {
     state,
     setDay: (newDay) => dispatch({type: actions.set_day, value: newDay}),
     bookInterview: (id, interview) => {
-      const appointment = {
-        ...state.appointments[id],
-        interview: { ...interview }
-      };
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      };
+      const appointments = modifyAppointments(id, interview);
       const interviewPut = {student: interview.student, interviewer: interview.interviewer.id}
       return axios.put(`/api/appointments/${id}`, {interview: interviewPut})
         .then(res => {
@@ -70,14 +113,7 @@ const useApplicationData = (initial) => {
         });
     },
     deleteInterview: (id) => {
-      const appointment = {
-        ...state.appointments[id],
-        interview: null
-      };
-      const appointments = {
-        ...state.appointments,
-        [id]: appointment
-      };
+      const appointments = modifyAppointments(id);
       return axios.delete(`/api/appointments/${id}`)
         .then(res => {
           dispatch({ type: actions.set_interview, value: appointments });
