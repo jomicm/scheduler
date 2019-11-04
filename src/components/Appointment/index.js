@@ -28,8 +28,10 @@ export default function Appointment(props) {
   },[props.interview]);
 
   const save = (name, interviewer) => {
+    hook.cleanError();
     if (!name.length || !interviewer) {
-      console.log('Incorrect data!');
+      hook.putError('Name or interviewer cannot be empty');
+      // console.log('Incorrect data!');
       return;
     }
     let interviewerObj = props.interviewers.filter(i => i.id === interviewer)[0];
@@ -67,8 +69,8 @@ export default function Appointment(props) {
           onEdit={editInterview}
         />
       )}
-      { hook.mode === EDIT && <Form name={props.interview.student} interviewer={props.interview.interviewer.id} interviewers={props.interviewers} onSave={save} onCancel={() => hook.transition(SHOW)} /> }
-      { hook.mode === CREATE && <Form interviewers={props.interviewers} onSave={save} onCancel={() => hook.transition(EMPTY)} /> }
+      { hook.mode === EDIT && <Form error={hook.error} name={props.interview.student} interviewer={props.interview.interviewer.id} interviewers={props.interviewers} onSave={save} onCancel={() => { hook.transition(SHOW); hook.cleanError() }} /> }
+      { hook.mode === CREATE && <Form error={hook.error} interviewers={props.interviewers} onSave={save} onCancel={() => {hook.transition(EMPTY); hook.cleanError()}} /> }
       { hook.mode === SAVING && <Status message={'Saving...'}/>}
       { hook.mode === CONFIRM && <Confirm message={'Are you sure to delete appointment?'} onConfirm={deleteInterview} onCancel={() => hook.transition(SHOW)}/>}
       { hook.mode === DELETING && <Status message={'Deleting...'}/>}

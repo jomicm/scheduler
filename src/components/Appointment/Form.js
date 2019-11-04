@@ -29,6 +29,7 @@ export default function Form(props) {
           */
           />
         </form>
+        <label style={{color:'red'}}>{props.error}</label>
         <InterviewerList interviewers={props.interviewers} value={interviewer} onChange={setInterviewer} selected={interviewer}/>
       </section>
       <section className="appointment__card-right">

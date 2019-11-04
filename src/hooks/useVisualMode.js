@@ -1,9 +1,17 @@
 import { useState } from "react";
 
 const useVisualMode = (initial) => {
+  const [error, setError] = useState('')
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]);
-  return { 
+  return {
+    error,
+    cleanError: () => {
+      setError('');
+    },
+    putError: (message) => {
+      setError(message);
+    },
     mode,
     transition: (newMode, replace = false) => {
       setMode(newMode);

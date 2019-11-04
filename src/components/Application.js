@@ -41,6 +41,7 @@ export default function Application(props) {
           {/* <DayList days={state.days} day={state.day} setDay={(newDay) => setState(prev => ({ ...prev, day: newDay})) }/> */}
           <DayList days={state.days} day={state.day} setDay={setDay} />
         </nav>
+        
         <img
           className="sidebar__lhl sidebar--centered"
           src="images/lhl.png"
