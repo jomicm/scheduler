@@ -30,7 +30,7 @@ export default function Appointment(props) {
   const save = (name, interviewer) => {
     hook.cleanError();
     if (!name.length || !interviewer) {
-      hook.putError('Name or interviewer cannot be empty');
+      hook.putError('student name cannot be blank');
       // console.log('Incorrect data!');
       return;
     }
