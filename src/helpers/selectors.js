@@ -1,3 +1,4 @@
+// Function which will return all appointments for a given day
 const getAppointmentsForDay = (state, day) => {
   const result = [];
   if (!day) return result;
@@ -11,6 +12,7 @@ const getAppointmentsForDay = (state, day) => {
   return result;
 };
 
+// Function which will return all interviewers for a given day
 const getInterviewersForDay = (state, day) => {
   const result = [];
   if (!day) return result;
@@ -24,6 +26,7 @@ const getInterviewersForDay = (state, day) => {
   return result;
 };
 
+// Functions which will return interviewer for a given day
 const getInterview = (state, interview) => {
   if (interview === null) 
     return null;

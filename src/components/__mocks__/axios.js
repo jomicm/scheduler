@@ -1,3 +1,4 @@
+// Declare some mock data to represent server response
 const fixtures = {
   days: [
     {
@@ -52,12 +53,13 @@ const fixtures = {
     }
   }
 };
-
+// Object to pick correct piece of data depending on route
 const urlTrafficData = {
   "/api/days": fixtures.days,
   "/api/appointments": fixtures.appointments,
   "/api/interviewers": fixtures.interviewers
 };
+// Main mock function to represent GET, PUT and DELETE methods
 export default {
   get: jest.fn(url => {
     const data = urlTrafficData[url] || [];
@@ -67,39 +69,16 @@ export default {
       data
     });
   }),
-  put: jest.fn(url => {
+  put: jest.fn(() => {
     return Promise.resolve({
       status: 204,
       statusText: "No Content",
     });
   }),
-  delete: jest.fn(url => {
+  delete: jest.fn(() => {
     return Promise.resolve({
       status: 204,
       statusText: "No Content",
     });
   }),
 }
-        // if (url === "/api/days") {
-        //   return Promise.resolve({
-        //     status: 200,
-        //     statusText: "OK",
-        //     data: fixtures.days
-        //   });
-        // }
-    
-        // if (url === "/api/appointments") {
-        //   return Promise.resolve({
-        //     status: 200,
-        //     statusText: "OK",
-        //     data: fixtures.appointments
-        //   });
-        // }
-    
-        // if (url === "/api/interviewers") {
-        //   return Promise.resolve({
-        //     status: 200,
-        //     statusText: "OK",
-        //     data: fixtures.interviewers
-        //   });
-        // }

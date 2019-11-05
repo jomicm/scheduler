@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import InterviewerList from '../InterviewerList';
 import Button from '../Button';
 
+// Form Component
 export default function Form(props) {
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
   const [name, setName] = useState(props.name || '');
@@ -19,7 +20,7 @@ export default function Form(props) {
       setError("Student name cannot be blank");
       return;
     }
-    props.onSave(name, interviewer);
+    props.onSave(name, interviewer, props.edit);
   }
   useEffect(() => {setError('')}, [name, interviewer]);
   return (
@@ -34,9 +35,6 @@ export default function Form(props) {
             placeholder="Enter Student Name"
             onChange={e => setName(e.target.value)}
             value={name}
-          /*
-            This must be a controlled component
-          */
           />
           <label className="appointment__validation" style={{color:'red'}}>{error}</label>
         </form>

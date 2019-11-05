@@ -1,11 +1,9 @@
 import React from "react";
-
-import { render, cleanup, fireEvent, getByPlaceholderText, getByTestId } from "@testing-library/react";
-
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import Form from "../Appointment/Form";
 
 afterEach(cleanup);
-
+// Mock interviewers data
 const interviewers = [
   {
     id: 1,
@@ -13,6 +11,8 @@ const interviewers = [
     avatar: "https://i.imgur.com/LpaY82x.png"
   }
 ];
+
+// Main Form Component tests
 describe("Form", () => {
 
   it("renders without student name if not provided", () => {

@@ -1,11 +1,12 @@
 import React from "react";
 import axios from "axios";
-import { render, cleanup, waitForElement, fireEvent, prettyDOM, getAllByTestId, waitForElementToBeRemoved, queryByText, getByText, debug } from "@testing-library/react";
+import { render, cleanup, waitForElement, fireEvent, getAllByTestId, waitForElementToBeRemoved, queryByText, getByText } from "@testing-library/react";
 import Application from "components/Application";
 
 afterEach(cleanup);
 
-describe("Form", () => {
+// Main Application Component tests
+describe("Application", () => {
   xit("renders without crashing", () => {
     render(<Application />);
   });
@@ -14,6 +15,7 @@ describe("Form", () => {
     const { getByText } = render(<Application />);
     return waitForElement(() => getByText('Monday'));
   });
+
   it("(promise chain) changes the schedule when a new day is selected", () => {
     const { getByText } = render(<Application />);
     return waitForElement(() => getByText('Monday'))
@@ -45,7 +47,6 @@ describe("Form", () => {
     fireEvent.click(interviewer);
     const onSaveBtn = appointment.children[1].children[1].firstChild.children[1];
     fireEvent.click(onSaveBtn);
-    // debug()
     await waitForElement(() => getByText(appointment, "Lydia Miller-Jones"));
     const day = getAllByTestId(container, "day").find(day =>
       queryByText(day, "Monday")
@@ -91,7 +92,6 @@ describe("Form", () => {
     expect(confirmEdit).not.toBe(null);
   });
 
-  /* test number five */
   it("shows the save error when failing to save an appointment", async() => {
     const { container } = render(<Application />);
     await waitForElement(() => getByText(container, "Archie Cohen"));
@@ -99,7 +99,6 @@ describe("Form", () => {
     const article = appointments.find(app =>
       queryByText(app, "Archie Cohen")
     );
-    
     const editBtn = article.children[1].children[1].firstChild.children[0];
     fireEvent.click(editBtn);
     await waitForElement(() => getByText(article, "Save"));
@@ -113,10 +112,10 @@ describe("Form", () => {
     await waitForElementToBeRemoved(() => getByText(article, "Saving..."));
     const closeBtn = article.children[1].children[1];
     fireEvent.click(closeBtn);
-    // console.log('appointment',prettyDOM(article));
     const error = queryByText(article, "Error");
     expect(error).toBe(null);
   });
+
   it("shows the delete error when failing to save an appointment", async() => {
     const { container } = render(<Application />);
     await waitForElement(() => getByText(container, "Archie Cohen"));
