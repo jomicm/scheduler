@@ -5,6 +5,8 @@ You can select days and look for available spaces so you can create a new appoin
 
 This project was built as a part of the Lighthouse Labs Web Development Bootcamp for the purposes of practice React and extensive testing. (Static, Unit, Integration, End-to-end)
 
+[Try it!](http://159.203.41.87:8000/)
+
 ## Application screens
 
 #### Welcome to Scheduler!
@@ -73,7 +75,7 @@ npm run storybook
 
 ## Future Development
 
-- Publish to online server using Docker technology
+- Publish to online server using Docker technology (done)
 
 ## Authors
 
