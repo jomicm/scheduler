@@ -58,7 +58,7 @@ export default function Appointment(props) {
     hook.transition(EDIT);
   };
   return (
-    <article className="appointment">
+    <article data-testid="appointment" className="appointment">
       <Header time={props.time}/>
       { hook.mode === EMPTY && <Empty onAdd={() => hook.transition(CREATE)}/> }
       { hook.mode === SHOW && props.interview && (

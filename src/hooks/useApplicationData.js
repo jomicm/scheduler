@@ -2,26 +2,27 @@ import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import useWebSocket from '../hooks/useWebSocket';
 import actions from '../helpers/constants';
+import {reducer} from '../reducers/application';
 const URL = process.env.REACT_APP_WEBSOCKET_URL;
 
 const useApplicationData = (initial) => {
-  const reducers = {
-    [actions.SET_DAY](_state, _action) {
-      return { ..._state, day: _action.value }
-    },
-    [actions.SET_APPLICATION_DATA](_state, _action) {
-      return { ..._state, days: _action.value[0].data, appointments: _action.value[1].data, interviewers: _action.value[2].data }
-    },
-    [actions.SET_INTERVIEW](_state, _action) {
-      return { ..._state, appointments: _action.value }
-    },
-    [actions.SET_DAYS](_state, _action) {
-      return { ..._state, days: _action.value }
-    }
-  };
-  const reducer = (state, action) => {
-    return reducers[action.type](state, action) || state;
-  };
+  // const reducers = {
+  //   [actions.SET_DAY](_state, _action) {
+  //     return { ..._state, day: _action.value }
+  //   },
+  //   [actions.SET_APPLICATION_DATA](_state, _action) {
+  //     return { ..._state, days: _action.value[0].data, appointments: _action.value[1].data, interviewers: _action.value[2].data }
+  //   },
+  //   [actions.SET_INTERVIEW](_state, _action) {
+  //     return { ..._state, appointments: _action.value }
+  //   },
+  //   [actions.SET_DAYS](_state, _action) {
+  //     return { ..._state, days: _action.value }
+  //   }
+  // };
+  // const reducer = (state, action) => {
+  //   return reducers[action.type](state, action) || state;
+  // };
   const [state, dispatch] = useReducer(reducer, {
     day: 'Monday',
     days: [],
