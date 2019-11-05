@@ -33,6 +33,7 @@ This project was built as a part of the Lighthouse Labs Web Development Bootcamp
 3. Start the Webpack Development Server using the `npm start` command. The app will be served at <http://localhost:8000/>.
 4. Go to <http://localhost:8000/> in your browser.
 5. You should have running also `scheduler-api` at <http://localhost:8001/>
+6. You have to have a local Postgres database named scheduler_development.
 
 ## Functionality
 
