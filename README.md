@@ -5,8 +5,9 @@ You can select days and look for available spaces so you can create a new appoin
 
 This project was built as a part of the Lighthouse Labs Web Development Bootcamp for the purposes of practice React and extensive testing. (Static, Unit, Integration, End-to-end)
 
-- [Try it! Hosted in Digital Ocean using Docker technology](http://159.203.41.87:8000/)
-- [Try it! Hosted in Heroku and Netlify](https://youthful-jones-cbf1ec.netlify.com/)
+- <a href="http://159.203.41.87:8000/" target="_blank">Try it! Hosted in Digital Ocean using Docker technology</a>
+
+- <a href="https://youthful-jones-cbf1ec.netlify.com/" target="_blank">Try it! Hosted in Heroku and Netlify</a>
 
 ## Application screens
 
